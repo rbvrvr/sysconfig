@@ -55,7 +55,6 @@
   # Enable Hyprland
   services.displayManager.defaultSession = "hyprland";
   programs.hyprland.enable = true;
-  programs.waybar.enable = true;
   programs.fish.enable = true;
 
   # Configure keymap in X11
@@ -116,7 +115,6 @@
     wget
     hyprland  # compositor
     kitty     # terminal
-    #waybar    # wayland status bar
     nwg-look  # GTK settings editor
     rofi      # application launcher
     hyprpanel
