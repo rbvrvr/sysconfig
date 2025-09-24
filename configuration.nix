@@ -45,12 +45,19 @@
     LC_TIME = "nl_NL.UTF-8";
   };
 
+  # Enable login+sudo using physical cryptographic key
+  security.pam = {
+    u2f.enable = true;
+    services.login.u2fAuth = true;
+    services.sudo.u2fAuth = true;
+  };
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Enable Hyprland
   services.displayManager.defaultSession = "hyprland";
@@ -118,7 +125,6 @@
     nwg-look  # GTK settings editor
     rofi      # application launcher
     hyprpanel
-    hyprshell
     obsidian
     bitwarden-desktop
     tutanota-desktop
