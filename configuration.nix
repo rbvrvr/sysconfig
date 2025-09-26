@@ -50,6 +50,7 @@
     u2f.enable = true;
     services.login.u2fAuth = true;
     services.sudo.u2fAuth = true;
+    services.hyprlock.enable = true;
   };
 
   # Enable the X11 windowing system.
@@ -61,7 +62,8 @@
 
   # Enable Hyprland
   services.displayManager.defaultSession = "hyprland";
-  programs.hyprland.enable = true;
+  programs.hyprland.enable = true;  # enable compositor
+  services.hypridle.enable = true;  # idle mgmt daemon, for hyprlock
   programs.fish.enable = true;
 
   # Configure keymap in X11
@@ -95,6 +97,11 @@
     #media-session.enable = true;
   };
 
+  # Lock screen when Yubikey is rmoved
+  services.udev.extraRules = ''
+    ACTION=="remove", ENV{ID_BUS}=="usb", ENV{ID_MODEL_ID}=="0407", ENV{ID_VENDOR_ID}=="1050", RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
+  '';
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
@@ -125,6 +132,7 @@
     nwg-look  # GTK settings editor
     rofi      # application launcher
     hyprpanel
+    hyprlock
     obsidian
     bitwarden-desktop
     tutanota-desktop
