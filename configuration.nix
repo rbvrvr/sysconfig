@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./mounts.nix   # mounts are deported from this config because they contain secrets
     ];
 
   # Bootloader.
@@ -64,6 +65,8 @@
   services.displayManager.defaultSession = "hyprland";
   programs.hyprland.enable = true;  # enable compositor
   services.hypridle.enable = true;  # idle mgmt daemon, for hyprlock
+
+  # Enable fish terminal
   programs.fish.enable = true;
 
   # Configure keymap in X11
@@ -98,6 +101,7 @@
   };
 
   # Lock screen when Yubikey is rmoved
+  # This behaviour also depends on hypridle, hyprlock and their dotfiles
   services.udev.extraRules = ''
     ACTION=="remove", ENV{ID_BUS}=="usb", ENV{ID_MODEL_ID}=="0407", ENV{ID_VENDOR_ID}=="1050", RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
   '';
@@ -127,12 +131,13 @@
   environment.systemPackages = with pkgs; [
     vim
     wget
-    hyprland  # compositor
-    kitty     # terminal
-    nwg-look  # GTK settings editor
-    rofi      # application launcher
-    hyprpanel
-    hyprlock
+    hyprland   # compositor
+    kitty      # terminal
+    nwg-look   # GTK settings editor
+    rofi       # application launcher
+    hyprpanel  # panel for hyprland
+    hyprlock   # lock screen for hyprland
+    cifs-utils # samba mount
     obsidian
     bitwarden-desktop
     tutanota-desktop
@@ -141,9 +146,9 @@
     krita
     geary
     mullvad-vpn
-    fortune
-    stow
-    git
+    fortune    # random messages shown in kitty (see config)
+    stow       # manage dotfiles
+    git        # version control for config & dotfiles
   ];
 
   fonts.packages = with pkgs; [
@@ -152,6 +157,12 @@
     nerd-fonts.fira-code
     jetbrains-mono
   ];
+
+  #fileSystems."/mnt/media" = {
+  #  device = "//192.168.1.217/media";
+  #  fsType = "cifs";
+  #  options = [ "username=rob" "password=W79HYNsP9oe3KbwENNT" "x-systemd.automount" "noauto" ];
+  #};
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
