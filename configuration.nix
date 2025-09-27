@@ -58,6 +58,7 @@
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
+  # Removing this will do some harm to my hyprpanel system and make login ugly.
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
@@ -137,6 +138,7 @@
     rofi       # application launcher
     hyprpanel  # panel for hyprland
     hyprlock   # lock screen for hyprland
+    hyprpaper  # wallpaper
     cifs-utils # samba mount
     obsidian
     bitwarden-desktop
