@@ -158,12 +158,6 @@
     jetbrains-mono
   ];
 
-  #fileSystems."/mnt/media" = {
-  #  device = "//192.168.1.217/media";
-  #  fsType = "cifs";
-  #  options = [ "username=rob" "password=W79HYNsP9oe3KbwENNT" "x-systemd.automount" "noauto" ];
-  #};
-
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
