@@ -8,7 +8,8 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./mounts.nix   # mounts are deported from this config because they contain secrets
+      #./mount.nix   # mounts are deported from this config because they contain secrets
+      <agenix/modules/age.nix>
     ];
 
   # Bootloader.
@@ -54,7 +55,31 @@
     services.hyprlock.enable = true;
   };
 
-  # Enable the X11 windowing system.
+  services.openssh = {
+    enable = true;
+    hostKeys = [
+      {
+        path = "/etc/ssh/ssh_host_ed25519_key";
+        type = "ed25519";
+      }  
+    ];
+  };
+
+  age.secrets.rob-truenas.file = /home/rob/secrets/rob-truenas.age;
+
+  fileSystems."/mnt/capture" = {
+    device = "//192.168.1.217/capture";
+    fsType = "cifs";
+    options = [ "credentials=${config.age.secrets.rob-truenas.path}" "x-systemd.automount" "noauto" ]; 
+  };
+
+  fileSystems."/mnt/media" = {
+    device = "//192.168.1.217/media";
+    fsType = "cifs";
+    options = [ "credentials=${config.age.secrets.rob-truenas.path}" "x-systemd.automount" "noauto" ]; 
+  };
+
+ # Enable the X11 windowing system.
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
@@ -151,7 +176,9 @@
     fortune    # random messages shown in kitty (see config)
     stow       # manage dotfiles
     git        # version control for config & dotfiles
-  ];
+    vlc
+    (callPackage <agenix/pkgs/agenix.nix> {})
+ ];
 
   fonts.packages = with pkgs; [
     fira-code
