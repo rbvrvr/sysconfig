@@ -65,7 +65,7 @@
     ];
   };
 
-  age.secrets.rob-truenas.file = /home/rob/secrets/rob-truenas.age;
+  age.secrets.rob-truenas.file = ./secrets/rob-truenas.age;
 
   fileSystems."/mnt/capture" = {
     device = "//192.168.1.217/capture";
