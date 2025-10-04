@@ -1,1 +1,2 @@
-mounts.nix
+hardware-configuration.nix
+*.bak
