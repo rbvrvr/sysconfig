@@ -8,7 +8,6 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      #./mount.nix   # mounts are deported from this config because they contain secrets
       <agenix/modules/age.nix>
     ];
 
@@ -55,6 +54,7 @@
     services.hyprlock.enable = true;
   };
 
+  # Add SSH host key pair
   services.openssh = {
     enable = true;
     hostKeys = [
@@ -65,14 +65,18 @@
     ];
   };
 
+  # Read the secrets file containing SAMBA credentials
+  # Can be decrypted using the right SSH host private key
   age.secrets.rob-truenas.file = ./secrets/rob-truenas.age;
 
+  # Mount capture share, using SAMBA credentials
   fileSystems."/mnt/capture" = {
     device = "//192.168.1.217/capture";
     fsType = "cifs";
     options = [ "credentials=${config.age.secrets.rob-truenas.path}" "x-systemd.automount" "noauto" ]; 
   };
 
+  # Mount media share, using SAMBA credentials
   fileSystems."/mnt/media" = {
     device = "//192.168.1.217/media";
     fsType = "cifs";
@@ -177,7 +181,7 @@
     stow       # manage dotfiles
     git        # version control for config & dotfiles
     vlc
-    (callPackage <agenix/pkgs/agenix.nix> {})
+    (callPackage <agenix/pkgs/agenix.nix> {})  # agenix command
  ];
 
   fonts.packages = with pkgs; [
