@@ -15,6 +15,8 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  services.mullvad-vpn.enable = true;
+
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -80,7 +82,7 @@
   fileSystems."/mnt/media" = {
     device = "//192.168.1.217/media";
     fsType = "cifs";
-    options = [ "credentials=${config.age.secrets.rob-truenas.path}" "x-systemd.automount" "noauto" ]; 
+    options = [ "credentials=${config.age.secrets.rob-truenas.path}" "gid=users" "file_mode=0770" "dir_mode=0770" "x-systemd.automount" "noauto" ]; 
   };
 
  # Enable the X11 windowing system.
@@ -156,10 +158,17 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim
+    #vim
     wget
     hyprland   # compositor
     kitty      # terminal
@@ -169,12 +178,15 @@
     hyprlock   # lock screen for hyprland
     hyprpaper  # wallpaper
     cifs-utils # samba mount
+    tree
+    niv
     obsidian
     bitwarden-desktop
     tutanota-desktop
     libreoffice
     blender
     krita
+    deluge
     geary
     mullvad-vpn
     fortune    # random messages shown in kitty (see config)
